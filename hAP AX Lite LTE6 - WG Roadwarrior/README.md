@@ -100,7 +100,9 @@ It will, however, exclude traffic going _directly_ to the router so I can still 
 ```
 
 And that's it!  
-When you connect
+When you connect to the WiFi and try to reach any of the addresses in the `Home` list, it'll automatically send this over the Wireguard!  
+In theory, you can create additional lists and mangle rules if you want to allow more stuff and keep it all organized!  
+I have _not_ yet tested it with routing _everything_ over the wireguard but feel free to test this yourself.
 
 ## Sharing is caring!
 
@@ -149,6 +151,8 @@ And setup the DHCP server on this interface:
   add address=172.16.1.0/24 comment=guests dns-server=172.16.1.1 gateway=172.16.1.1
 ```
 
+Now you have a guest network that will _not_ be allowed to reach your Home network but still use your data plan.
+
 ### Allow some stuff over the Wireguard
 
 TODO
@@ -161,8 +165,8 @@ This makes it so I only need to remember what date it is in order to remember th
 An additional benefit is that it allows me *some* control over who connects, especially if I hand the password to a colleague or something.
 
 I've written the script so that it makes sure no clients are connected before changing the password.  
-So as long as someone is, the password will remain the same.  
-Useful for when I have shifts that pass into a new day.
+So as long as someone is connected, the password will remain the same.  
+Useful for when I have night shifts that pass into a new day.
 ``` 
 /system scheduler
   add comment="Changes guest password" interval=1h name=change-guest-password on-event="# Get amount of connected devices\
