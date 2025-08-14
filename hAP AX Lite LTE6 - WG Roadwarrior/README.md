@@ -4,7 +4,11 @@ Since I work as a truck driver, I'm on the road quite a lot.
 However, breaks are a *huge* pain for me.
 As a result, I bought a little [hAP AX Lite LTE6](https://mikrotik.com/product/hap_ax_lite_lte6) (herafter "router") so I can have portable wifi with me, without relying on my phone's wifi hotspot.  
 Together with a little `Unlimited Data` (FUP applies) Dutch telecom provider `Odido`, I basically don't have to worry about data either.  
-All I need is a power source (like a powerbank or USB port in a car) and I'm good to go.
+And with the power of a hacksaw, I made it all fit inside a little pouch (although I would later end up using a slightly different pouch - which still would have needed hacksawing), together with a powerbank.
+
+<img src="img/IMG_20250712_123356.jpg" width="256">
+<img src="img/WhatsApp Image 2025-07-12 at 16.09.37.jpeg" width="256">
+<img src="img/42297167-b68e-43c9-881a-5caee5c727c9.jpg" width="256">
 
 I use Wireguard quite a bit when on the road to connect to my servers but what if I get a new device and forget to setup a client?  
 Well, I'm kinda screwed then...  
@@ -14,7 +18,7 @@ That's probably save me a lot of headaches in the future.
 An additional feature is that you can use _either_ the LTE connection _or_ `ether1` as your uplink without affecting the tunnel (at most there'll be a temporary disconnect when swapping over).  
 This makes it a good companion on holidays too!  
 Sadly, the router only has a single `2.4GHz` WiFi connection, so it can't easily be used to relay a WiFi connection while you use (for example) the `5GHz` connection yourself.  
-Something like a [Chateau LTE6](https://mikrotik.com/product/chateau_lte6) would be your friend here, but this was too big for my goals and didn't allow powering via USB-C.
+Something like a [Chateau LTE6](https://mikrotik.com/product/chateau_lte6) would be your friend here, but this was too big for my goals and didn't allow powering via USB.
  
 **NOTE**: This setup only handles the side of the router as a "client".  
 I assume you've already setup a server on your own.
