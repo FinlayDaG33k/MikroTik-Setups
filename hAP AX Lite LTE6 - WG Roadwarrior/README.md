@@ -6,9 +6,7 @@ As a result, I bought a little [hAP AX Lite LTE6](https://mikrotik.com/product/h
 Together with a little `Unlimited Data` (FUP applies) Dutch telecom provider `Odido`, I basically don't have to worry about data either.  
 And with the power of a hacksaw, I made it all fit inside a little pouch (although I would later end up using a slightly different pouch - which still would have needed hacksawing), together with a powerbank.
 
-<img src="img/IMG_20250712_123356.jpg" width="256">
-<img src="img/WhatsApp Image 2025-07-12 at 16.09.37.jpeg" width="256">
-<img src="img/42297167-b68e-43c9-881a-5caee5c727c9.jpg" width="256">
+<img src="img/pouch.png">
 
 I use Wireguard quite a bit when on the road to connect to my servers but what if I get a new device and forget to setup a client?  
 Well, I'm kinda screwed then...  
