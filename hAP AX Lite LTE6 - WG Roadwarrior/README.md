@@ -3,7 +3,7 @@
 Since I work as a truck driver, I'm on the road quite a lot.  
 However, breaks are a *huge* pain for me.
 As a result, I bought a little [hAP AX Lite LTE6](https://mikrotik.com/product/hap_ax_lite_lte6) (herafter "router") so I can have portable wifi with me, without relying on my phone's wifi hotspot.  
-Together with a little `Unlimited Data` (FUP applies) Dutch telecom provider `Odido`, I basically don't have to worry about data either.  
+Together with a little `Unlimited Data` plan (FUP applies) from Dutch telecom provider `Odido`, I basically don't have to worry about data either.  
 And with the power of a hacksaw, I made it all fit inside a little pouch (although I would later end up using a slightly different pouch - which still would have needed hacksawing), together with a powerbank.  
 In my opinion, this makes it a *true* road warrior.
 
