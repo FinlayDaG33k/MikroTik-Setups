@@ -3,15 +3,21 @@
 Since I work as a truck driver, I'm on the road quite a lot.  
 However, breaks are a *huge* pain for me.
 As a result, I bought a little [hAP AX Lite LTE6](https://mikrotik.com/product/hap_ax_lite_lte6) (herafter "router") so I can have portable wifi with me, without relying on my phone's wifi hotspot.  
-Together with a little `Unlimited Data` (FUP applies) Dutch telecom provider `Odido`, I basically don't have to worry about data either.
+Together with a little `Unlimited Data` (FUP applies) Dutch telecom provider `Odido`, I basically don't have to worry about data either.  
+All I need is a power source (like a powerbank or USB port in a car) and I'm good to go.
 
 I use Wireguard quite a bit when on the road to connect to my servers but what if I get a new device and forget to setup a client?  
 Well, I'm kinda screwed then...  
 But what if I am one step ahead of myself and just have the router handle it for me?  
-That's probably save me a lot of headaches in the future
+That's probably save me a lot of headaches in the future.
 
+An additional feature is that you can use _either_ the LTE connection _or_ `ether1` as your uplink without affecting the tunnel (at most there'll be a temporary disconnect when swapping over).  
+This makes it a good companion on holidays too!  
+Sadly, the router only has a single `2.4GHz` WiFi connection, so it can't easily be used to relay a WiFi connection while you use (for example) the `5GHz` connection yourself.  
+Something like a [Chateau LTE6](https://mikrotik.com/product/chateau_lte6) would be your friend here, but this was too big for my goals and didn't allow powering via USB-C.
+ 
 **NOTE**: This setup only handles the side of the router as a "client".  
-I assume you've already set that up on your own.
+I assume you've already setup a server on your own.
 
 **NOTE**: This setup uses Wireguard *but* should in theory also work just fine for IPsec or OpenVPN.  
 You'll just need to substitute the Wireguard interface for your IPsec/OpenVPN interface.
