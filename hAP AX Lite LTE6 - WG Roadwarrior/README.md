@@ -86,9 +86,9 @@ Now let's define the IP ranges we want to have go via Wireguard.
 In my case, I only care about some ranges for my home network.
 ```
 /ip firewall address-list
-  add address=192.168.1.0/24 list="Home"
-  add address=192.168.3.0/24 list="Home"
-  add address=192.168.0.0/24 list="Home"
+  add address=192.168.1.0/24 list="Home via VPN"
+  add address=192.168.3.0/24 list="Home via VPN"
+  add address=192.168.0.0/24 list="Home via VPN"
 ```
 
 And finally, to make it all work, we need to mark routes to go over wireguard.
@@ -96,11 +96,11 @@ This will just look whether the destination address is in the list we just made 
 It will, however, exclude traffic going _directly_ to the router so I can still access it and its services.
 ```
 /ip firewall mangle
-  add action=mark-routing chain=prerouting comment="Home via VPN" dst-address=!192.168.88.1 dst-address-list="Home" new-routing-mark=VPN
+  add action=mark-routing chain=prerouting comment="Home via VPN" dst-address=!192.168.88.1 dst-address-list="Home via VPN" new-routing-mark=VPN
 ```
 
 And that's it!  
-When you connect to the WiFi and try to reach any of the addresses in the `Home` list, it'll automatically send this over the Wireguard!  
+When you connect to the WiFi and try to reach any of the addresses in the `Home via VPN` list, it'll automatically send this over the Wireguard!  
 In theory, you can create additional lists and mangle rules if you want to allow more stuff and keep it all organized!  
 I have _not_ yet tested it with routing _everything_ over the wireguard but feel free to test this yourself.
 
@@ -111,51 +111,65 @@ Yes, let's just assume we have friends, okay?
 Anyways, they can also make use of this router _but_ you don't quite want them to access your home network.  
 Well, then we can just setup a guest network for them but not mark the routes to go through the VPN.
 
+First, we create a virtual interface under the main WiFi interface.
+Don't forget to replace `MyGuestSSID` and `lamepassword123` with your own!
 ```
 /interface wifi
-  add configuration.mode=ap .ssid="MyGuestSSID" disabled=no master-interface=wifi1 name=wifi2 security.authentication-types=wpa2-psk,wpa3-psk
+  add configuration.mode=ap .ssid="MyGuestSSID" disabled=no master-interface=wifi1 name=wifi2 security.authentication-types=wpa2-psk,wpa3-psk security.passphrase="lamepassword123"
 ```
 
+Next, we want to add the new virtual interface as a bridge port.  
+Additionally, we want to all the traffic with the VLAN ID `2`.  
+This is arbitrarily chosen and you can pick any ID more suitable to your needs.
 ``` 
 /ip bridge port
   add bridge=bridge frame-types=admit-only-untagged-and-priority-tagged interface=wifi2 pvid=2
 ```
 
+Next, we need to add the VLAN to our bridge filters and enable VLAN filtering on our bridge.  
+This may temporarily cause connections to drop but it should pick up after a second or two.
 ``` 
 /interface bridge vlan
   add bridge=bridge tagged=bridge untagged=wifi2 vlan-ids=2
-```
 
-```
-/ip pool
-  add name=guests ranges=172.16.1.2-172.16.1.254
+/interface bridge
+  set name=bridge vlan-filtering=yes
 ```
 
 Setup a VLAN interface on our `bridge` so we can act as the gateway for this network.
+Then we need to also give it an IP address.
+I'll be using the `172.16.1.0/24` range for this VLAN but you can pick whatever you want.
 ```
 /interface vlan
   add interface=bridge name=vlan2 vlan-id=2
-```
 
-Next up, give out router an IP on this new interface
-``` 
 /ip address
   add address=172.16.1.1/24 interface=vlan2 network=172.16.1.0
 ```
 
-And setup the DHCP server on this interface:
+And setup the DHCP server on this VLAN:
 ```
+/ip pool
+  add name=guests ranges=172.16.1.2-172.16.1.254
+
 /ip dhcp-server
   add address-pool=guests interface=vlan2 lease-time=10m name=guests
+  
 /ip dhcp-server network
   add address=172.16.1.0/24 comment=guests dns-server=172.16.1.1 gateway=172.16.1.1
 ```
 
-Now you have a guest network that will _not_ be allowed to reach your Home network but still use your data plan.
+Now you have a guest network that will _not_ be allowed to reach your Home network but still use your data plan.  
 
-### Allow some stuff over the Wireguard
+If you want to allow certain addresses to be routed via the VPN anyways, just add them to a new list and create the required mangle rule.
 
-TODO
+```
+/ip firewall address-list
+  add address=1.2.3.4 list="Guest via VPN"
+  
+/ip firewall mangle
+  add action=mark-routing chain=prerouting comment="Guest via VPN" dst-address=!192.168.88.1 dst-address-list="Guest via VPN" new-routing-mark=VPN
+```
 
 ### Password rotation
 
