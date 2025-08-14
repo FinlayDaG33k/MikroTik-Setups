@@ -27,7 +27,22 @@ In that case, you can skip this entire section really.
 
 ## Setup Wireguard
 
-[TODO: Setup Wireguard itself]
+First, we need to setup Wireguard itself.  
+This can be done in the usual by adding a wireguard interface and a peer.  
+Of course, you'll need to replace the "REDACTED" bits with your own information.  
+This is just basic MikroTik Wireguard stuff and other than that has very little impact on the setup.  
+Only the interface name is important for later.
+```
+/interface wireguard
+  add listen-port=13231 mtu=1420 name=wireguard1
+  
+/interface wireguard peers
+  add allowed-address=0.0.0.0/0 client-address=REDACTED client-dns=REDACTED client-listen-port=13231 endpoint-address=REDACTED endpoint-port=13231 interface=wireguard1 name=home persistent-keepalive=5s public-key=\
+    "REDACTED"  
+  
+/ip address    
+  add address=REDACTED interface=wireguard1 network=REDACTED  
+```
 
 Now we need to create a routing table for the VPN.  
 This is just a "collection of routes" but on its own it doesn't quite do anything yet.
