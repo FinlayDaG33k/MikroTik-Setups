@@ -25,15 +25,6 @@ I assume you've already setup a server on your own.
 **NOTE**: This setup uses Wireguard *but* should in theory also work just fine for IPsec or OpenVPN.  
 You'll just need to substitute the Wireguard interface for your IPsec/OpenVPN interface.
 
-## Basic router setup
-
-First, we need to set up the router so our devices can connect to it and I can browse the internet as-is.  
-No wireguard here just yet.
-If you've just taken your router out of the box and used the default configs, then most of this should be in place already.  
-In that case, you can skip this entire section really.
-
-[TO BE CONTINUED...]
-
 ## Setup Wireguard
 
 First, we need to setup Wireguard itself.  
