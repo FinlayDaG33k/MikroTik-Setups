@@ -22,6 +22,10 @@ Oddly enough, some of the routes aren't documented on their site.
 **NOTE**: This setup only shows how to get your MikroTik to function with Delta as the upstream.  
 It does not cover anything LAN related like DHCP or WiFi.
 
+## ONT Registration
+
+TODO
+
 ## Internet Setup
 
 The internet setup lies at the foundation of this entire guide.  
