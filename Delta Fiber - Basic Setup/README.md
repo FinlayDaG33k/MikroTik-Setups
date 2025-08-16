@@ -19,6 +19,9 @@ Oddly enough, some of the routes aren't documented on their site.
   - `62.45.57.36/32` is the exception and _must_ be routed over VLAN 100.
 - [Routes for VoIP](voip-destinations.txt) (Route over VLAN 102).
 
+**NOTE**: This setup only shows how to get your MikroTik to function with Delta as the upstream.  
+It does not cover anything LAN related like DHCP or WiFi.
+
 ## Internet Setup
 
 The internet setup lies at the foundation of this entire guide.  
