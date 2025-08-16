@@ -1,6 +1,19 @@
 # Delta Fiber - Basic Setup
 
-I've also made the routes available as a `.txt` file in case you want to automate it, or if you somehow stumbled upon this guide but aren't an MT user.
+For years, we were customers of UPC, which then later became Ziggo and then VodafoneZiggo.  
+Outside the huge debacle with the `Intel Puma 6` chipset in their modems (which took _months_ for them to [resolve](https://x.com/finlaydag33k/status/1409134081783353345) - even including a [scam attempt](https://x.com/finlaydag33k/status/1405249947797274625)), they mostly worked fine.  
+However, their monopoly on the copper network here (unless you were fine with 20Mbit down via VDSL), meant they charged ridiculous amounts for their services (100 euro a month for 300/30, TV and landline phone).  
+So when competitor Delta announced they would be rolling out fiber here, I immediately summoned my parents around the table.  
+After running some math, we'd get about the same _but_ instead of 300/30 internet, we'd get 1000/1000 and as such, we signed up.
+After a huge initial struggle, things have been running mostly smoothly for about a year now.  
+So I'll be sharing my setup for those also wanting to use Delta with their MikroTik.  
+
+My setup uses a [CCR2004-1G-12S+2XS](https://mikrotik.com/product/ccr2004_1g_12s_2xs) as my gateway router *but* any MikroTik with an SFP+ port like an [RB5009UG+S+IN](https://mikrotik.com/product/rb5009ug_s_in) will do.  
+Additionally, you'll need an ONT that is supported, the `Zaram ZXOS11NPI` is a very popular one.  
+And, of course, the right fiber cable: The FTU (mounted to the wall) accepts `SC/APC` inside the sled while the Zaram ONT accepts `SC/UPC`.
+
+I've also made the routes available as a `.txt` file in case you want to automate it, or if you somehow stumbled upon this guide but aren't an MT user.  
+Oddly enough, some of the routes aren't documented on their site.
 
 - [Routes for IPTV](iptv-destinations.txt) (Route over VLAN 101).
   - `62.45.57.36/32` is the exception and _must_ be routed over VLAN 100.
@@ -8,10 +21,13 @@ I've also made the routes available as a `.txt` file in case you want to automat
 
 ## Internet Setup
 
+The internet setup lies at the foundation of this entire guide.  
+And let's be real, chances are this is the most important for you anyways.
+
+
 ## IPTV
 
-And now we need to add a bunch of routes.  
-Some of these are documented on their website but some of these were not.  
+And now we need to add a bunch of routes.
 IPTV will still function just fine without these routes, however, it will nibble away from your internet bandwidth.  
 Not the end of the world but if you run a lot of stuff, it's just a waste.
 
