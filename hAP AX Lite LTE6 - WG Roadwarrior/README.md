@@ -196,3 +196,18 @@ Useful for when I have night shifts that pass into a new day.
 ```
 
 You can view the script in "plain" [here](password-rotation.rsc).
+
+### DNS over Wireguard
+
+One issue I encountered during use was that DNS didn't resolve over Wireguard (using the router's internal DNS server).  
+In my case, my home DNS server runs at `192.168.0.7` which could be accessed by clients but not the router.  
+While this wasn't a _huge_ deal during normal use, if I quickly had to access something at home, this could become a headache.
+The reason this doesn't work is because, while traffic for _clients_ was routed over the Wireguard, the traffic for the _router_ wasn't.
+Luckily, the solution was quite simple, tell the router to send traffic from the `output` chain destined for my home LAN over the Wireguard too using a simple Mangle rule:
+
+```
+/ip firewall mangle
+  add action=mark-routing chain=output comment=\
+    "Home via VPN (Router traffic)" dst-address-list="Home via VPN" \
+    new-routing-mark=VPN
+```
