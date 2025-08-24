@@ -166,7 +166,7 @@ If you want to allow certain addresses to be routed via the VPN anyways, just ad
 ### Password rotation
 
 Because I tend to forget my wifi passwords a lot, I made a little script that just changes it for me in a way I at least remember.  
-My choice for this is the current date `DDMMYYYY`.  
+My choice for this is the current date `YYYYMMDD`.  
 This makes it so I only need to remember what date it is in order to remember the password.
 An additional benefit is that it allows me *some* control over who connects, especially if I hand the password to a colleague or something.
 
@@ -183,7 +183,7 @@ Useful for when I have night shifts that pass into a new day.
     \n:local day [ :pick \$datetime 8 11 ];\
     \n:local month [ :pick \$datetime 5 7 ];\
     \n:local year [ :pick \$datetime 0 4 ];\
-    \n:local newPassword \"\$day\$month\$year\";\
+    \n:local newPassword \"\$year\$month\$day\";\
     \n\
     \n# Get the current password\
     \n:local currentPassword [/interface/wifi get [find name=\"wifi2\"] security.passphrase];\
