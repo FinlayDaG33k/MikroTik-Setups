@@ -174,8 +174,8 @@ I've written the script so that it makes sure no clients are connected before ch
 So as long as someone is connected, the password will remain the same.  
 Useful for when I have night shifts that pass into a new day.
 ``` 
-/system scheduler
-  add comment="Changes guest password" interval=1h name=change-guest-password on-event="# Get amount of connected devices\
+/system script
+add dont-require-permissions=no name=change-guest-password owner=admin policy=read,write source="# Get amount of connected devices\
     \n:local deviceCount [/interface/wifi/registration-table print count-only where interface=\"wifi2\"];\
     \n\
     \n# Create the new password\
@@ -192,10 +192,21 @@ Useful for when I have night shifts that pass into a new day.
     \n:if (( \$newPassword != \$currentPassword ) && ( \$deviceCount = 0 )) do={\
     \n  :log info \"changing guest password to: \\\"\$newPassword\\\"\";\
     \n  /interface wifi set wifi2 security.passphrase=\"\$newPassword\";\
-    \n}" policy=read,write start-date=2025-07-23 start-time=00:00:00
+    \n}
 ```
 
 You can view the script in "plain" [here](password-rotation.rsc).
+
+I then added a scheduler task that runs the script.  
+All it does though, is execute the previous script.  
+This also means that if I want to make a change later, I only need to update the script in one place.  
+I have set it to run every 10 minutes, but you can change this to be longer or shorter if you want.  
+```
+/system scheduler
+add comment="Changes guest password" interval=10m name=change-guest-password \
+    on-event="/system script run change-guest-password" policy=read,write \
+    start-date=2025-07-23 start-time=00:00:0
+```
 
 ### DNS over Wireguard
 
