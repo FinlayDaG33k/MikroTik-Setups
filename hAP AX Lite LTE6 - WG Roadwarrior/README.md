@@ -222,3 +222,34 @@ Luckily, the solution was quite simple, tell the router to send traffic from the
     "Home via VPN (Router traffic)" dst-address-list="Home via VPN" \
     new-routing-mark=VPN
 ```
+
+
+### Restarting the LTE modem
+
+Sometimes, the LTE modem doesn't work properly, or rather, traffic doesn't flow through it properly.  
+More often than not, this can be solved by restarting the modem (disabling it via WinBox/App, waiting a few seconds and then re-enabling it).  
+But this requires both manual work _and_ a device that has WinBox (or the Mikrotik app) on it, not ideal when you're driving a truck with 80km/h on the highway.
+
+So to solve this, I made a little script that does this for me.  
+The script is setup that it will _only_ attempt to restart the interface if the system has been up for at least 10 minutes.  
+This will prevent it from constantly restarting the interface while still booting up the system.
+```
+/system script
+    add dont-require-permissions=no name=lte-watchdog owner=admin policy=read,write,test source=":if (([/system resource get uptime] > 300) && ([/ping 8.8.8.8 count=4 size=64 interval=1s interface=lte1]=0)) do={\r\
+        \n    :log error \"LTE connection error, restarting...\"\r\
+        \n    /interface disable lte1\r\
+        \n    /delay 1s\r\
+        \n    /interface enable lte1\r\
+        \n    :log info \"LTE interface has been restarted!\"\r\
+        \n} else={\r\
+        \n  :log debug \"LTE interface good!\"\r\
+        \n}\r\
+        \n"
+```
+
+I then setup a scheduler task to run this script.  
+It will run it every 10 minutes but again, you can change it if you'd like.  
+```
+/system scheduler
+    add interval=10m name=lte-watchdog on-event="/system script run lte-watchdog" policy=read,write start-date=2025-08-27 start-time=00:00:00
+```
