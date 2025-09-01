@@ -203,7 +203,7 @@ This also means that if I want to make a change later, I only need to update the
 I have set it to run every 10 minutes, but you can change this to be longer or shorter if you want.  
 ```
 /system scheduler
-add comment="Changes guest password" interval=10m name=change-guest-password \
+add interval=10m name=change-guest-password \
     on-event="/system script run change-guest-password" policy=read,write \
     start-date=2025-07-23 start-time=00:00:0
 ```
