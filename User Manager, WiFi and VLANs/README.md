@@ -32,16 +32,19 @@ If you want to use a different VLAN, change the `Mikrotik-Wireless-VLANID` attri
 
 ## Updating your WiFi's security settings
 
-First, we need to allow your router to access User Manager.  
-If you run your User Manager on a _different_ device than your WiFi, change the address accordingly (it must point to the device running your wifi).  
+First, we need to allow your router to access User Manager.
 ```
 /user-manager router
-  add address=127.0.0.1 name="local host"
+  add address=127.0.0.1 name="localhost" shared-secret=lamesecret
 ```
 
-And then we need to tell it to use it for RADIUS.  
-Again, if you run your User Manager on a _different_ device than your WiFi, change the address accordingly (it must point to device running User Manager).
+And then we need to tell it to use it for RADIUS.
 ``` 
 /radius
-add address=127.0.0.1 require-message-auth=no service=wireless
+add address=127.0.0.1 require-message-auth=no service=wireless secret=lamesecret
 ```
+
+**NOTE**: If you run User Manager on a different device than what handles WiFi authentication, change the addresses accordingly.  
+
+**NOTE**: The secrets must be the same on the User Manager as well as the RADIUS config.  
+You can leave this empty but it's not recommended.
