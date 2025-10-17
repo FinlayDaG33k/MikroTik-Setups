@@ -20,6 +20,22 @@ It does not handle setting up WiFi, CAPsMAN or VLANs on routers and switches.
 
 ## Installing User Manager
 
+
+## (Optionally) Move the database to a USB disk
+
+If your RouterOS device has a USB port, you can opt to move the User Manager database there.  
+Doing so saves NAND cycles and while some will argue that it isn't that bad or that they will still last for ages, I personally prefer just using a USB drive (which is why I run my User Manager on an RB5009 instead of my CRS317).  
+This of course also helps if you either re-purpose an older device with limited storage (like a hAP AC) as the database can get to 4MB reasonably fast, which on 16MB of NAND, is a lot!  
+I assume you have already mounted your storage, if not, you'll need to figure that out first.
+
+After that, you can tell User Manager to use a different path for its database.  
+I'll be putting it on `usb1` in a directory `user-manager`.  
+You an put it in the root if you want, I prefer this style of organization.
+```
+/user-manager database
+  db-path=usb1/user-manager5
+```
+
 ## Adding a User
 
 For this user, we'll assume you're gonna use `VLAN 1000`.  
