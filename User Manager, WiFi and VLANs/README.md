@@ -64,3 +64,14 @@ add address=127.0.0.1 require-message-auth=no service=wireless secret=lamesecret
 
 **NOTE**: The secrets must be the same on the User Manager as well as the RADIUS config.  
 You can leave this empty but it's not recommended.
+
+## (Optionally) Remove User Manager Sessions
+
+After a while, old User Manager sessions can start to accumulate.  
+As such, you can add a scheduler that will clean out the old sessions every week.  
+You can do it more often, or less often if you desire by changing the `interval`.
+
+``` 
+/system scheduler
+  add interval=1w name="Userman Session Clean" on-event="/user-manager/session remove [find where active=no]" policy=read,write start-date=1970-01-01 start-time=00:00:0
+```
