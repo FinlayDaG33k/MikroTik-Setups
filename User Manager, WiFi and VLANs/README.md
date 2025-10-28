@@ -7,7 +7,6 @@ Reasons to use this setup:
 
 - You want to isolate certain users without making 1337666 separate SSIDs.
 - You want to easily see which devices belongs to which person.
-- You want to set time limits for specific users (eg. people you only ever see in the weekends).
 
 Reasons to not use this setup:
 
@@ -20,6 +19,68 @@ It does not handle setting up WiFi, CAPsMAN or VLANs on routers and switches.
 
 ## Installing User Manager
 
+First, we'll need to install the required package for User Manager.  
+At the time of writing, this package is sub-500KiB, so it should fit on nearly all devices.  
+
+Let's update the package cache first:
+```
+/system package update check-for-updates without-paging
+```
+
+It may show the following output:
+``` 
+channel: stable                       
+installed-version: 7.19                         
+status: finding out latest version...
+
+channel: stable                  
+installed-version: 7.19                    
+latest-version: 7.20.2                  
+status: New version is available
+```
+
+I'll be skipping updating the RouterOS version for now, but you can do so yourself if you want to.  
+
+Next, check that the User Manager package gets listed:
+
+``` 
+/system package print
+```
+
+Which should show something like the following output:
+
+``` 
+Flags: X - DISABLED; A - AVAILABLE
+Columns: NAME, VERSION, BUILD-TIME, SIZE
+#    NAME            VERSION  BUILD-TIME           SIZE     
+0    routeros        7.19     2025-05-22 07:53:44  12.4MiB
+1 XA user-manager                                  336.1KiB
+```
+
+If so, we can enable it:
+
+```
+/system package enable user-manager
+```
+
+Then reboot the device and make sure User Manager is installed after it has come back online.  
+
+``` 
+/system reboot
+/system package print
+```
+
+It should now show the following:
+
+``` 
+Flags: X - DISABLED; A - AVAILABLE
+Columns: NAME, VERSION, BUILD-TIME, SIZE
+ #    NAME            VERSION  BUILD-TIME           SIZE     
+ 0    routeros        7.19     2025-05-22 07:53:44  12.4MiB
+ 1    user-manager    7.19     2025-05-22 07:53:44  336.1KiB
+```
+
+If this is the case, then User Manager is installed!
 
 ## (Optionally) Move the database to a USB disk
 
@@ -30,7 +91,8 @@ I assume you have already mounted your storage, if not, you'll need to figure th
 
 After that, you can tell User Manager to use a different path for its database.  
 I'll be putting it on `usb1` in a directory `user-manager`.  
-You an put it in the root if you want, I prefer this style of organization.
+You an put it in the root if you want, I prefer this style of organization as it makes migrations and backups a lot easier.
+
 ```
 /user-manager database
   db-path=usb1/user-manager5
@@ -54,10 +116,10 @@ First, we need to allow your router to access User Manager.
   add address=127.0.0.1 name="localhost" shared-secret=lamesecret
 ```
 
-And then we need to tell it to use it for RADIUS.
+And then we need to tell our device to use the RADIUS server..
 ``` 
 /radius
-add address=127.0.0.1 require-message-auth=no service=wireless secret=lamesecret
+  add address=127.0.0.1 require-message-auth=no service=wireless secret=lamesecret
 ```
 
 **NOTE**: If you run User Manager on a different device than what handles WiFi authentication, change the addresses accordingly.  
