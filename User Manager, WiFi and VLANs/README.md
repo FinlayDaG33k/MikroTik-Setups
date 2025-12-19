@@ -137,3 +137,26 @@ You can do it more often, or less often if you desire by changing the `interval`
 /system scheduler
   add interval=1w name="Userman Session Clean" on-event="/user-manager/session remove [find where active=no]" policy=read,write start-date=1970-01-01 start-time=00:00:0
 ```
+
+## (Optionally) Set Auth methods
+
+To make things easier for myself when setting up a new device, you can setup different auth methods.  
+By default, MikroTik has set all `Outer Auths` and all `Inner Auths` to be enabled.  
+This means that, when asked for your credentials, you have to manually select the correct ones, which is annoying and increases chance of mistakes.
+
+However, since we do not use certificate-based authentication, we only really need `EAP TTLS` for the `Outer Auth` and `TTLS PAP` for the `Inner Auth` to be enabled.  
+What this means is that first, the client will create TLS tunnel (but unlike `EAP TLS`, doesn't require a client-side certificate) to the UserManager and then use `PAP` to actually authenticate with the RADIUS server.  
+This _does_ create more steps in authentication but makes it plenty secure for home use.
+
+To do this, we need to update the default profile (you can also create a new one if you prefer that):
+
+```
+/user-manager user group
+  set [ find default-name=default ] inner-auths=ttls-pap outer-auths=eap-ttls
+```
+
+After this, clients will automatically be presented with the right options.
+
+**NOTE**: `EAP TTLS` with `TTLS PAP` should *not* be used in a business or enterprise environment as it sacrifices some security for convenience.
+I only use them here because it does not require a PKI (making it easier to deploy on devices I do not control).  
+Use `EAP TLS` if you can use certificate-based authentication.
