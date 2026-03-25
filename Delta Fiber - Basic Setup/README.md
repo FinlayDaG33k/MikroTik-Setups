@@ -22,6 +22,8 @@ Oddly enough, some of the routes aren't documented on their site.
 **NOTE**: This setup only shows how to get your MikroTik to function with Delta as the upstream.  
 It does not cover anything LAN related like DHCP or WiFi.
 
+**NOTE**: Please make sure you have setup firewalls before exposing your router to the internet.
+
 ## ONT Registration
 
 TODO
@@ -32,11 +34,38 @@ The internet setup lies at the foundation of this entire guide.
 And let's be real, chances are this is the most important for you anyways.
 
 
+```
+/interface ethernet
+  set [ find default-name=sfp-sfpplus1 ] comment="To Modem" l2mtu=1600 loop-protect=off
+/interface vlan
+  add comment="Delta Internet" interface=sfp-sfpplus1 loop-protect=off name=delta-vlan100 vlan-id=100
+  add comment="Delta IPTV" interface=sfp-sfpplus1 name=delta-vlan101 vlan-id=101
+  add comment="Delta VoIP" interface=sfp-sfpplus1 name=delta-vlan102 vlan-id=102
+  
+/interface list
+  add name=WAN
+  
+/interface list member
+  add interface=bonding1 list=LAN
+  add interface=delta-vlan100 list=WAN
+  add interface=delta-vlan101 list=WAN
+  add interface=delta-vlan102 list=WAN
+  
+/ip dhcp-client
+  add add-default-route=no comment="Delta VoIP" dhcp-options=clientid,clientid_duid interface=delta-vlan102 use-peer-dns=no use-peer-ntp=no
+  add comment="Delta Internet" interface=delta-vlan100 use-peer-dns=no use-peer-ntp=no
+  add add-default-route=no comment="Delta IPTV" dhcp-options=iptv_rg,hostname,clientid interface=delta-vlan101 use-peer-dns=no use-peer-ntp=no  
+```
+
+**NOTE**: I'm not using Delta's DNS.
+
 ## IPTV
 
-And now we need to add a bunch of routes.
-IPTV will still function just fine without these routes, however, it will nibble away from your internet bandwidth.  
+And now we need to add a bunch of routes.  
+IPTV will still function just fine without these routes, however, it may nibble away from your internet bandwidth.  
 Not the end of the world but if you run a lot of stuff, it's just a waste.
+
+**NOTE**: I am not sure whether IPTV nibbles away from your regular bandwidth at this moment
 
 ```
 /ip route
